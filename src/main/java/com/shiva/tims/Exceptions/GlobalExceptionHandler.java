@@ -16,4 +16,12 @@ public class GlobalExceptionHandler {
 		
 		return ResponseEntity.status(401).body(ex.getMessage());
 	}
+	@ExceptionHandler(ResourceNotFoundException.class)
+	public ResponseEntity<?> handleResourceNotFound(ResourceNotFoundException ex){
+		return ResponseEntity.status(404).body(ex.getMessage());
+	}
+	@ExceptionHandler(DuplicateResourceException.class)
+	public ResponseEntity<?> handleDuplicateResource(DuplicateResourceException ex){
+		return ResponseEntity.status(409).body(ex.getMessage());
+	}
 }
