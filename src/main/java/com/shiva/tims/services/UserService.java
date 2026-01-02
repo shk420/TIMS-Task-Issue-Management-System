@@ -56,10 +56,10 @@ public class UserService {
 				.toList();
 	}
 
-	public User updateUser(UserUpdateDto dto) {
+	public User updateUser(String username,UserUpdateDto dto) {
 
-	    User user = userRepository.findByUsername(dto.getUserName())
-	            .orElseThrow(() -> new RuntimeException("User with username '" + dto.getUserName() + "' does not exist"));
+	    User user = userRepository.findByUsername(username)
+	            .orElseThrow(() -> new RuntimeException("User with username '" + username + "' does not exist"));
 
 	    if (dto.getFullName() != null) user.setFullName(dto.getFullName());
 	    if (dto.getEmail() != null) user.setEmail(dto.getEmail());

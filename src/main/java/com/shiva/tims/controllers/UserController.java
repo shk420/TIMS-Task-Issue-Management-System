@@ -44,10 +44,10 @@ public class UserController {
 	}
 	
 	@PreAuthorize("hasRole('ADMIN')")
-	@PutMapping
-	public ResponseEntity<String> updateUser( @RequestBody UserUpdateDto dto ){
+	@PutMapping("/{username}")
+	public ResponseEntity<String> updateUser(@PathVariable String username,@RequestBody UserUpdateDto dto ){
 		
-		User updatedUser = userService.updateUser(dto);
+		User updatedUser = userService.updateUser(username,dto);
 		return ResponseEntity.ok("User Updated Successfully:  " + updatedUser.getUsername());
 		
 	}

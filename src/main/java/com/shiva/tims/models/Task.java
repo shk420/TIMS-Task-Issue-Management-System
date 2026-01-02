@@ -1,4 +1,4 @@
-package com.shiva.tims.models;
+  package com.shiva.tims.models;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -14,12 +14,14 @@ import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "tasks")
-@Data
+@Setter
+@Getter
 @NoArgsConstructor
 public class Task {
 
