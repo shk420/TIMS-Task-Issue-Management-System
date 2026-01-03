@@ -11,5 +11,6 @@ public class CreateTaskResponse {
 	
 	private String id;
 	private String title;
+	private String message;
 
 }

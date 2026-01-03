@@ -13,8 +13,6 @@ import lombok.Setter;
 public class CreateTaskRequest {
 	
 	@NotBlank
-	private String proejctId;
-	@NotBlank
 	private String title;
 	@NotBlank
 	private String description;
