@@ -29,24 +29,25 @@ public class TaskService {
 		this.userRepo = userRepo;
 	}
 
-	
+
 	@Transactional
 	public CreateTaskResponse createTask(String projectId, CreateTaskRequest request) {
 		
-		if(repo.existsByTitle(request.getTitle())) {
+		if(repo.existsByTitleAndProject_Id(request.getTitle(), projectId)) {
 			
-			throw new DuplicateResourceException("Task with same already exists");
+			throw new DuplicateResourceException("Task with same name already exists : " + request.getTitle());
 		}
 		
 		Project project = projectRepo.findById(projectId)
-				.orElseThrow(() -> new ResourceNotFoundException("Project does not exist"));
+				.orElseThrow(() -> new ResourceNotFoundException("Project does not exist:  " + projectId ));
 		
-		User assignee = userRepo.findById(request.getAssigneeId())
-				.orElseThrow(() -> new ResourceNotFoundException("Assignee Does Not Exist"));
+		String assigneeId = request.getAssigneeId();
+		User assignee = userRepo.findById(assigneeId)
+				.orElseThrow(() -> new ResourceNotFoundException("Assignee Does Not Exist : " + assigneeId));
 		
-		String repoterId = SecurityUtil.getCurrentUserId();
-		User reporter = userRepo.findById(repoterId)
-				.orElseThrow(() -> new ResourceNotFoundException("Reporter Does Not Exist"));
+		String reporterId = SecurityUtil.getCurrentUserId();
+		User reporter = userRepo.findById(reporterId)
+				.orElseThrow(() -> new ResourceNotFoundException("Reporter Does Not Exist:  " + reporterId));
 		
 		Task task = new Task();
 		task.setProject(project);
@@ -67,13 +68,14 @@ public class TaskService {
 		
 	}
 
+	@Transactional(readOnly = true)
 	public TaskResponse getTaskById(String projectId, String taskId){
-		Task task = repo.existsById(taskId)
-			.orElseThrow (() -> new ResourceNotFoundException("Task Does Not exists"));
+		Task task = repo.findById(taskId)
+			.orElseThrow (() -> new ResourceNotFoundException("Task Does Not exists : " + taskId));
 		
 
 		if(!task.getProject().getId().equals(projectId)){
-			throw new ResourceNotFoundException("Task Does Not belong to this proejct");
+			throw new ResourceNotFoundException("Task Does Not belong to this project : " + projectId );
 		}
 
 		return new TaskResponse(
@@ -90,7 +92,12 @@ public class TaskService {
 		);
 	}
 
+	@Transactional(readOnly = true)
 	public List<TaskList> getAllTasks(String projectId){
+
+		if(!projectRepo.existsById(projectId)){
+			throw new ResourceNotFoundException("Project does not exists");
+		}
 		List<Task> tasks =  repo.findByProjectId(projectId);
 
 		return tasks.stream()
@@ -103,5 +110,19 @@ public class TaskService {
 		))
 		.toList();
 	}
+
+
+
+	@Transactional
+	public void deleteTaskById(String projectId,String taskId){
+		Task task = repo.findById(taskId)
+		.orElseThrow(() -> new ResourceNotFoundException("Task does not exist :  " + taskId));
+		if(!task.getProject().getId().equals(projectId)){
+			throw new ResourceNotFoundException(" Task does not belong to this project : " + projectId );
+		}
+		repo.delete(task);
+	}
+
+	
 
 }

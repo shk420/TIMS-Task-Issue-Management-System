@@ -7,7 +7,7 @@ import com.shiva.tims.models.Task;
 
 @Repository
 public interface TaskRepository extends JpaRepository<Task, String> {
-	boolean existsByTitle(String title);
+	boolean existsByTitleAndProject_Id(String title, String peojectId);
 	List<Task> findByProjectId(String projectId);
 
 }

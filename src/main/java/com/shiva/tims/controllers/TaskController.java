@@ -58,6 +58,18 @@ public class TaskController {
 
 		return ResponseEntity.ok(tasks);
 	}
+
+	// Delete Task
+	@PreAuthorize("hasRole('ADMIN', 'MANAGER')")
+	@DeleteMapping("/{taskId}")
+	public ResponseEntity<Void> deleteTaskById(@PathVariable String projectId, @Valid @RequestBody String taskId){
+
+		service.deleteTaskById(projectId, taskId);
+
+		return ResponseEntity.noContent().build();
+
+	}
+
 	
 	
 	
