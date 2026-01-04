@@ -1,7 +1,11 @@
 package com.shiva.tims.models.Dtos.task;
+import java.time.LocalDateTime;
 
 import com.shiva.tims.models.TaskPriority;
 import com.shiva.tims.models.TaskStatus;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
@@ -19,7 +23,6 @@ public class TaskResponse {
     private final TaskPriority priority;
     private final TaskStatus status;
 
-    private final String createdAt;
-    private final Strinfg updatedAt;
-
+    private final LocalDateTime createdAt;
+    private final LocalDateTime updatedAt;
 }

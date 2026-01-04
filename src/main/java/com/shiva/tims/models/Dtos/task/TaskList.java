@@ -3,6 +3,9 @@ package com.shiva.tims.models.Dtos.task;
 import com.shiva.tims.models.TaskPriority;
 import com.shiva.tims.models.TaskStatus;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
 @Getter
 @AllArgsConstructor
 public class TaskList {
