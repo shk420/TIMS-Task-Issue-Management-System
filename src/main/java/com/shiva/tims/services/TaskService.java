@@ -15,6 +15,7 @@ import com.shiva.tims.models.Dtos.task.CreateTaskRequest;
 import com.shiva.tims.models.Dtos.task.CreateTaskResponse;
 import com.shiva.tims.models.Dtos.task.TaskList;
 import com.shiva.tims.models.Dtos.task.TaskResponse;
+import com.shiva.tims.models.Dtos.task.UpdateTaskResponse;
 import com.shiva.tims.repositories.ProjectRepository;
 import com.shiva.tims.repositories.TaskRepository;
 import com.shiva.tims.repositories.UserRepository;
@@ -93,8 +94,8 @@ public class TaskService {
                 task.getDescription(),
                 task.getAssignee().getId(),
                 task.getReporter().getId(),
-                task.getPriority(),   // ✅ FIXED
-                task.getStatus(),     // ✅ FIXED
+                task.getPriority(),   
+                task.getStatus(),     
                 task.getCreatedAt(),
                 task.getUpdatedAt()
         );
@@ -118,6 +119,31 @@ public class TaskService {
                         task.getPriority()
                 ))
                 .toList();
+    }
+
+    // Update Task
+    @Transactional
+    public UpdateTaskResponse updateTask(String projectId, String taskId, CreateTaskRequest request) {
+
+        Task task = repo.findById(taskId)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Task does not exist: " + taskId));
+
+        if (!task.getProject().getId().equals(projectId)) {
+            throw new ResourceNotFoundException(
+                    "Task does not belong to project: " + projectId);
+        }
+
+        task.setTitle(request.getTitle());
+        task.setDescription(request.getDescription());
+
+        Task updated = repo.save(task);
+
+        return new UpdateTaskResponse(
+                updated.getId(),
+                updated.getTitle(),
+                "Task Updated Successfully"
+        );
     }
 
     // Delete Task

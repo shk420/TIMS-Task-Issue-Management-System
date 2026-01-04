@@ -3,6 +3,7 @@ package com.shiva.tims.controllers;
 import java.net.URI;
 import java.util.List;
 
+import org.hibernate.sql.Update;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -11,6 +12,7 @@ import com.shiva.tims.models.Dtos.task.CreateTaskRequest;
 import com.shiva.tims.models.Dtos.task.CreateTaskResponse;
 import com.shiva.tims.models.Dtos.task.TaskList;
 import com.shiva.tims.models.Dtos.task.TaskResponse;
+import com.shiva.tims.models.Dtos.task.UpdateTaskResponse;
 import com.shiva.tims.services.TaskService;
 
 import jakarta.validation.Valid;
@@ -59,6 +61,19 @@ public class TaskController {
 
         return ResponseEntity.ok(
                 service.getAllTasks(projectId)
+        );
+    }
+
+    // Update Task
+    @PreAuthorize("hasAnyRole('ADMIN','MANAGER','TESTER')")
+    @PutMapping("/{taskId}")
+    public ResponseEntity<UpdateTaskResponse> updateTask(
+            @PathVariable String projectId,
+            @PathVariable String taskId,
+            @Valid @RequestBody CreateTaskRequest request) {
+
+        return ResponseEntity.ok(
+                service.updateTask(projectId, taskId, request)
         );
     }
 
